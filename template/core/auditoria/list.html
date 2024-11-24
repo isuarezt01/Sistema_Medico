@@ -1,0 +1,135 @@
+{% extends "components/base.html" %}
+{% block content %} 
+  <div class="container-fluid">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10 px-md-4 main-content">
+            <!-- Patient List Content -->
+            <div class="card mb-4">
+                <div class="card-body">
+                   <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="card-title mb-0">Listado de Auditorias</h5>
+                   </div>
+                   <!-- Search and Filter -->
+                   <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between g-3 mb-4">
+                    <form method="GET" action="{% url 'core:auditoria_list' %}" class="d-flex flex-column flex-md-row gap-3 align-items-md-center">
+                        <div class="col-md-6">
+                            <input type="text" name="q" class="form-control search-box"   value="{{ request.GET.q }}" placeholder="Buscar Doctor...">
+                        </div>
+                      </form>
+                    </div>
+
+                    <!-- Patient Table -->
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Tabla</th>
+                                    <th>Registro</th>
+                                    <th>Accion</th>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Estacion</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                               {% for item in auditorias %} 
+                                
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div>
+                                                <div class="fw-bold">{{item.usuario}}</div>
+                                                <small class="text-muted">{{item.id}}</small>
+                                            </div>
+                                        </div>
+                                        <td>{{item.tabla}}</td>
+                                        <td>{{item.registroid}}</td>
+                                        <td>{{item.accion}}</td>
+                                        <td>{{item.fecha}}</td>
+                                        <td>{{item.hora}}</td>
+                                        <td>{{item.estacion}}</td>
+
+                                    <td>
+                                        <div class="action-buttons d-flex gap-2">
+                                           <button class="btn btn-info btn-sm" title="Detalle Doctor"
+                                                onclick="verAuditoria('{{  item.id }}')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <a href="{% url 'core:doctor_update' item.id %}" class="btn btn-info btn-sm text-white" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            {% with id=item.id name=item.usuari0 msg="Esta seguro de elimnar la auditoria:" %}
+                                             <button class="btn btn-danger" onclick="confirmDelete('{{ id }}','{{name}}','{{ msg|escapejs }}');"> <i class="fa-solid fa-trash"></i></button>
+                                            {% endwith %}
+                                        </div>
+                                    </td>
+                                </tr>
+                             {% endfor %} 
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav class="d-flex justify-content-between align-items-center mt-4">
+                        <p class="text-muted mb-0">{{ page_obj.start_index }} - {{ page_obj.end_index }} de {{ page_obj.paginator.count }} pacientes</p>
+                        <ul class="pagination mb-0">
+                            {% if page_obj.has_previous %} 
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1"><i class="fas fa-chevron-left"></i></a>
+                                </li>
+                            {% endif %}
+                            {% for num in page_obj.paginator.page_range %}
+                              <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{num}}</a></li>
+                           
+                            {% endfor %}
+                            {% if page_obj.has_next %}
+                              <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}"><i class="fas fa-chevron-right"></i></a>
+                              </li>
+                             {% endif %}
+                        </ul>
+                    </nav>
+                    <!-- Fin de Pagination -->
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <!-- añade el modal generico de eliminacion -->
+  {% include 'includes/confirm_delete_modal.html' %}
+  <!-- añade el modal particular de los datos de detalle del paciente -->
+  {% include 'core/auditoria/includes/detail_modal.html' %}
+ 
+{% endblock %}
+{% block js %}
+  <script>
+    /* funciones del mode¿al detalle */
+    function verAuditoria(id) {
+        fetch(`/auditoria_detail/${id}/`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('auditoria-id').textContent = data.id;
+                document.getElementById('auditoria-usuario').textContent = data.usuario;
+                document.getElementById('auditoria-tabla').textContent = data.tabla;
+                document.getElementById('auditoria-registroid').textContent = data.registroid;
+                document.getElementById('auditoria-accion').textContent = data.accion;
+                document.getElementById('auditoria-fecha').textContent = data.fecha;
+                document.getElementById('auditoria-hora').textContent = data.hora;
+                document.getElementById('auditoria-estacion').textContent = data.estacion;
+
+                const modal = new bootstrap.Modal(document.getElementById('auditoriaModal'));
+                modal.show();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al cargar los datos de auditoría');
+            });
+}
+
+  </script>
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  {% endblock %}

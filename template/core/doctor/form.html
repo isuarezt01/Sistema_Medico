@@ -1,0 +1,109 @@
+{% extends "components/base.html" %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100"> <!-- Centrado horizontal y vertical -->
+    <div class="row justify-content-center">
+        <!-- Main Content -->
+        <div class="col-md-10 col-lg-8 px-md-5 main-content">
+            <!-- mensajes de error del formulario -->
+            {% include 'includes/message_error_form.html' %}
+            
+            <!-- Formulario Doctor -->
+            <form method="post" enctype="multipart/form-data" class="card shadow-lg p-5">
+                {% csrf_token %}
+                <h3 class="text-primary mb-4 fw-bold text-center">{{ title1 }}</h3>
+                
+                <div class="row g-4 align-items-center justify-content-center">
+                    <!-- Imagen del Doctor -->
+                    <div class="col-lg-8 text-center align-items-center">
+                        <div id="imagenPreview" class="mb-3">
+                            {% if form.foto.value %}
+                                <img id="imagenSeleccionada" src="{{ form.foto.value.url }}" class="rounded img-fluid shadow-sm" alt="Foto del doctor">
+                            {% else %}
+                                <img id="imagenSeleccionada" src="{% static 'img/empty.png' %}" class="rounded img-fluid shadow-sm" alt="Foto por defecto">
+                            {% endif %}
+                        </div>
+                        <label for="{{ form.foto.id_for_label }}" class="form-label fw-bold">{{ form.foto.label }}</label>
+                        {{ form.foto }}
+                    </div>
+
+                    <!-- Campos de Información del Doctor -->
+                    <div class="col-lg-8 justify-content-center">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.nombres.id_for_label }}" class="form-label fw-bold"><i class="fas fa-user me-2"></i>{{ form.nombres.label }}</label>
+                                {{ form.nombres }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.apellidos.id_for_label }}" class="form-label fw-bold"><i class="fas fa-user me-2"></i>{{ form.apellidos.label }}</label>
+                                {{ form.apellidos }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.cedula.id_for_label }}" class="form-label fw-bold"><i class="fas fa-id-card me-2"></i>{{ form.cedula.label }}</label>
+                                {{ form.cedula }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.especialidad.id_for_label }}" class="form-label fw-bold"><i class="fas fa-stethoscope me-2"></i>{{ form.especialidad.label }}</label>
+                                {{ form.especialidad }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.telefonos.id_for_label }}" class="form-label fw-bold"><i class="fas fa-phone me-2"></i>{{ form.telefonos.label }}</label>
+                                {{ form.telefonos }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.email.id_for_label }}" class="form-label fw-bold"><i class="fas fa-envelope me-2"></i>{{ form.email.label }}</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger small">{{ form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.direccion.id_for_label }}" class="form-label fw-bold"><i class="fas fa-map-marker-alt me-2"></i>{{ form.direccion.label }}</label>
+                                {{ form.direccion }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.fecha_nacimiento.id_for_label }}" class="form-label fw-bold"><i class="fas fa-calendar-alt me-2"></i>{{ form.fecha_nacimiento.label }}</label>
+                                {{ form.fecha_nacimiento }}
+                                {% if form.fecha_nacimiento.errors %}
+                                    <div class="text-danger small">{{ form.fecha_nacimiento.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.codigoUnicoDoctor.id_for_label }}" class="form-label fw-bold"><i class="fas fa-hashtag me-2"></i>{{ form.codigoUnicoDoctor.label }}</label>
+                                {{ form.codigoUnicoDoctor }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.activo.id_for_label }}" class="form-label fw-bold"><i class="fas fa-toggle-on me-2"></i>{{ form.activo.label }}</label>
+                                {{ form.activo }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="d-flex justify-content-end mt-4">
+                    <button class="btn btn-success me-2" type="submit">
+                        <i class="fas fa-save me-2"></i>Grabar Doctor
+                    </button>
+                    <a class="btn btn-warning" href="{% url 'core:doctor_list' %}">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

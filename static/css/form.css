@@ -1,0 +1,117 @@
+/* sidebar.css */
+
+/* Sidebar */
+.sidebar {
+    background: linear-gradient(135deg, #4c76be, #2e59d9);
+    color: white;
+    min-height: 100vh;
+    padding-top: 20px;
+}
+
+.sidebar h5, .sidebar a {
+    color: white;
+}
+
+.sidebar .nav-link {
+    padding: 15px;
+    font-size: 1.1em;
+}
+
+.sidebar .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+
+/* Estilo para el contenido principal */
+.main-content {
+    background-color: #f4f6f9;
+    padding: 30px;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Stat Cards */
+.stat-card {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    color: white;
+}
+
+/* Hover effects */
+.table-hover tbody tr:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+    transition: all 0.3s;
+}
+
+/* Action buttons */
+.action-buttons .btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    transition: all 0.3s;
+}
+
+.action-buttons .btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Patient status indicators */
+.patient-status {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.status-active {
+    background-color: #2ecc71;
+}
+
+.status-waiting {
+    background-color: #f1c40f;
+}
+
+.status-inactive {
+    background-color: #e74c3c;
+}
+
+/* Search box */
+.search-box {
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s;
+}
+
+.search-box:focus {
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+    border-color: #3498db;
+}
+
+/* Attend button */
+.btn-attend {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.btn-attend:hover {
+    background-color: #27ae60;
+    color: white;
+}
+
+/* Pagination styles */
+.pagination .page-link {
+    color: #2c3e50;
+    border: none;
+    margin: 0 2px;
+    border-radius: 5px;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #3498db;
+    border-color: #3498db;
+}

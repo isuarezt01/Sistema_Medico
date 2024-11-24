@@ -1,0 +1,94 @@
+{% extends "components/base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-2xl font-bold text-gray-900 mb-6 text-center">{{ title }}</h1>
+
+        <!-- Resumen de métricas -->
+        <div class="grid grid-cols-2 gap-4 sm:grid-cols-4 mb-6">
+            <div class="bg-blue-500 rounded-lg shadow-sm p-4">
+                <h2 class="text-sm font-semibold text-white mb-1">Total Pacientes</h2>
+                <p class="text-2xl font-bold text-white">{{ total_pacientes }}</p>
+            </div>
+            <div class="bg-green-500 rounded-lg shadow-sm p-4">
+                <h2 class="text-sm font-semibold text-white mb-1">Total Citas</h2>
+                <p class="text-2xl font-bold text-white">{{ total_citas }}</p>
+            </div>
+            <div class="bg-yellow-500 rounded-lg shadow-sm p-4">
+                <h2 class="text-sm font-semibold text-white mb-1">Tasa Finalización</h2>
+                <p class="text-2xl font-bold text-white">{{ tasa_finalizacion }}%</p>
+            </div>
+            <div class="bg-red-500 rounded-lg shadow-sm p-4">
+                <h2 class="text-sm font-semibold text-white mb-1">Edad Promedio</h2>
+                <p class="text-2xl font-bold text-white">{{ edad_promedio }} años</p>
+            </div>
+        </div>
+
+        <!-- Gráfico de resumen general -->
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 mb-6">
+            <div class="bg-white rounded-lg shadow-sm p-4">
+                <h2 class="text-sm font-semibold text-gray-800 mb-2">Resumen General</h2>
+                <div class="h-48">
+                    <canvas id="resumenGeneral"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Datos JSON renderizados desde Django -->
+<script id="resumen-general" type="application/json">
+    {{ resumen_general|json_script }}
+</script>
+
+{% block extrajs %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Opciones comunes para gráficos
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    };
+
+    // Gráfico de Resumen General
+    const resumenGeneralData = JSON.parse(document.getElementById('resumen-general').textContent);
+    new Chart(document.getElementById('resumenGeneral'), {
+        type: 'bar',
+        data: {
+            labels: ['Total Pacientes', 'Total Citas', 'Tasa Finalización (%)', 'Edad Promedio'],
+            datasets: [{
+                label: 'Valores',
+                data: [
+                    resumenGeneralData.total_pacientes,
+                    resumenGeneralData.total_citas,
+                    resumenGeneralData.tasa_finalizacion,
+                    resumenGeneralData.edad_promedio
+                ],
+                backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444']
+            }]
+        },
+        options: {
+            ...commonOptions,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}

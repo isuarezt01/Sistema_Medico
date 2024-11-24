@@ -1,0 +1,60 @@
+{% extends "components/base.html" %}
+{% load static %}
+{% block css%}
+    <link rel="stylesheet" href={% static "css/form.css" %}>
+{% endblock %}
+
+{% block content %} 
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10 px-md-4 main-content">
+                    <!-- mensajes de erroe del formulario -->
+        {% include 'includes/message_error_form.html' %}
+            <form method="post" enctype="multipart/form-data" class="py-4">
+                {% csrf_token %}
+                <div class="card shadow p-5">
+                    <h2 class="text-center text-primary mb-4">{{ title1 }}</h2>
+                    <div class="row g-0 align-items-center">
+                        <!-- Columna de la derecha (Formulario principal) -->
+                        <div class="col-lg-8 px-4 mx-auto">
+                            <div class="row">
+                                <!-- Campo Nombre -->
+                                <div class="col-md-6 mb-4">
+                                    <label for="{{ form.nombre.id_for_label }}" class="form-label fw-bold">
+                                        <i class="fas fa-user-tag me-2"></i>{{ form.nombre.label }}
+                                    </label>
+                                    {{ form.nombre }}
+                                    {% if form.nombre.errors %}
+                                        <div class="text-danger small">{{ form.nombre.errors }}</div>
+                                    {% endif %}
+                                </div>
+                
+                                <!-- Campo Descripción -->
+                                <div class="col-md-6 mb-4">
+                                    <label for="{{ form.descripcion.id_for_label }}" class="form-label fw-bold">
+                                        <i class="fas fa-info-circle me-2"></i>{{ form.descripcion.label }}
+                                    </label>
+                                    {{ form.descripcion }}
+                                </div>
+                            </div>
+                
+                            <!-- Botones de acción -->
+                            <div class="d-flex justify-content-end mt-4">
+                                <button class="btn btn-success me-2" type="submit">
+                                    <i class="fas fa-save me-1"></i>Grabar Especialidad
+                                </button>
+                                <a class="btn btn-warning" href="{% url 'core:speciality_list' %}">
+                                    <i class="fas fa-times me-1"></i>Cancelar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

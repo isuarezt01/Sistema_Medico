@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header h2 { color: #2563eb; }
+        .details, .atenciones { width: 100%; border-collapse: collapse; }
+        .details th, .details td, .atenciones th, .atenciones td {
+            border: 1px solid #ddd; padding: 8px; text-align: left;
+        }
+        .details th, .atenciones th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Ficha Médica de {{ paciente.nombre_completo }}</h2>
+        <p>Fecha de generación: {{ fecha_actual|date:"d/m/Y" }}</p>
+    </div>
+
+    <h3>Datos del Paciente</h3>
+    <table class="details">
+        <tr><th>Cédula</th><td>{{ paciente.cedula }}</td></tr>
+        <tr><th>Edad</th><td>{{ paciente.calcular_edad(paciente.fecha_nacimiento) }} años</td></tr>
+        <tr><th>Tipo de Sangre</th><td>{{ paciente.tipo_sangre }}</td></tr>
+        <tr><th>Alergias</th><td>{{ paciente.alergias|default:"No registradas" }}</td></tr>
+    </table>
+
+    <h3>Historial de Atenciones</h3>
+    <table class="atenciones">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Motivo de Consulta</th>
+                <th>Diagnósticos</th>
+                <th>Tratamiento</th>
+                <th>Medicamentos</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for atencion in atenciones %}
+            <tr>
+                <td>{{ atencion.fecha_atencion }}</td>
+                <td>{{ atencion.motivo_consulta }}</td>
+                <td>{{ atencion.get_diagnosticos }}</td>
+                <td>{{ atencion.tratamiento }}</td>
+                <td>
+                    <ul>
+                        {% for detalle in atencion.atenciones.all %}
+                        <li>{{ detalle.medicamento.nombre }} ({{ detalle.cantidad }} unidades)</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center">No se encontraron atenciones médicas</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
